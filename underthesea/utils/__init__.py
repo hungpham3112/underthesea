@@ -37,10 +37,14 @@ def generate_table(data, headers=None):
     if headers:
         for i, item in enumerate(headers):
             max_widths[i] = max(max_widths[i], len(str(item)))
-        header_str = ''
-        for i, item in enumerate(headers):
-            header_str += '| {item:{width}} '.format(item=item, width=max_widths[i])
-        header_str += '|\n'
+        header_str = (
+            ''.join(
+                '| {item:{width}} '.format(item=item, width=max_widths[i])
+                for i, item in enumerate(headers)
+            )
+            + '|\n'
+        )
+
         for i, item in enumerate(headers):
             border_str = '|' if i == 0 else '+'
             header_str += border_str + '-' * (max_widths[i] + 2)
@@ -48,10 +52,14 @@ def generate_table(data, headers=None):
     content += header_str
     # generate table body
     for row in data:
-        data_str = ''
-        for i, item in enumerate(row):
-            data_str += '| {item:{width}} '.format(item=str(item), width=max_widths[i])
-        data_str += '|\n'
+        data_str = (
+            ''.join(
+                '| {item:{width}} '.format(item=str(item), width=max_widths[i])
+                for i, item in enumerate(row)
+            )
+            + '|\n'
+        )
+
         content += data_str
     return content
 

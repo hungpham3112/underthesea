@@ -41,5 +41,4 @@ def ner(sentence, format=None):
     """
     sentence = chunk(sentence)
     crf_model = CRFNERPredictor.Instance()
-    result = crf_model.predict(sentence, format)
-    return result
+    return crf_model.predict(sentence, format)

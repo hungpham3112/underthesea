@@ -39,8 +39,7 @@ def playlist_youtube_api(playlist):
         maxResults=50,
         playlistId=playlist
     )
-    response = request.execute()
-    return response
+    return request.execute()
 
 
 class COLReader:
@@ -57,7 +56,7 @@ class COLReader:
                 transcript = TextFormatter().format_transcript(
                     YouTubeTranscriptApi.get_transcript(id, languages=["vi"]))
             except Exception:
-                print("Could not extract video: %s" % doc_url)
+                print(f"Could not extract video: {doc_url}")
 
             if transcript:
                 sentences = transcript.split("\n")
@@ -79,7 +78,7 @@ class COLReader:
 
 if __name__ == "__main__":
     playlists = ["PLH_v4r_pvudV5ZrNx9HldKLICIjUSCRLb"]
-    print("YouTube playlists: %s" % len(playlists))
+    print(f"YouTube playlists: {len(playlists)}")
     print("You will be required to authenticate each!")
 
     # Get all lyrics from playlists
@@ -87,17 +86,17 @@ if __name__ == "__main__":
     for pl in playlists:
         response = playlist_youtube_api(pl)
         data = COLReader(response).data
-        print("Playlist videos: %s" % len(data))
+        print(f"Playlist videos: {len(data)}")
         all_data.extend(data)
     print("Sample\n", all_data[0])
-    print("Total lyric lines %s" % len(all_data))
+    print(f"Total lyric lines {len(all_data)}")
 
     # Write to file
     content = ""
     for i, s in enumerate(all_data):
         doc_url = "# doc_url = " + s["doc_url"]
         date = "# date = " + s["date"]
-        sent_id = "# sent_id = " + str(i + 1)
+        sent_id = f"# sent_id = {str(i + 1)}"
         sent = s["sentence"]
         content += "\n".join([doc_url, date, sent_id, sent, "\n"])
 

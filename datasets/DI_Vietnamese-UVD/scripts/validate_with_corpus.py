@@ -13,16 +13,33 @@ dict_file = join(dirname(dirname(__file__)), "datasets", "DI_Vietnamese-UVD", "U
 MAX_SHOW_ERRORS = 100
 total_errors = 0
 
-punct = {"!", "/", ",", ".", "...", "?", "-", "\"", "-", ":", "(", ")", "–", "&", ";", "‘", "’", "+"}
+punct = {
+    "!",
+    "/",
+    ",",
+    ".",
+    "...",
+    "?",
+    "\"",
+    "-",
+    ":",
+    "(",
+    ")",
+    "–",
+    "&",
+    ";",
+    "‘",
+    "’",
+    "+",
+}
+
 specials = {"rbkt", "lbkt"}
 
 
 def warn(file, line_number, message, type=None):
     global total_errors
-    text = ""
-    if type:
-        text = f"[{type}] "
-    text += basename(file) + ":" + str(line_number)
+    text = f"[{type}] " if type else ""
+    text += f"{basename(file)}:{str(line_number)}"
     if total_errors < MAX_SHOW_ERRORS:
         print(colored(text, 'red'), colored(message, 'red'))
 
@@ -30,8 +47,7 @@ def warn(file, line_number, message, type=None):
 
 
 def load_dictionary(dict_file):
-    dict = joblib.load(dict_file)
-    return dict
+    return joblib.load(dict_file)
 
 
 def load_corpus(file):
@@ -60,12 +76,29 @@ if __name__ == '__main__':
             continue
         tags = list(words[word])
         ignores_tags = {
-            "ADJ", "ADV", "INTJ", "NOUN", "PROPN", "PRON", "SYM", "X", "N:G", "VERB:G", "NY",
-            "N", "NB", "NNPy",
-            "NNP", "NNPy",
-            "V", "VERB",
-            "Num", "NUMx", "NUM", "NUMX"
+            "ADJ",
+            "ADV",
+            "INTJ",
+            "NOUN",
+            "PROPN",
+            "PRON",
+            "SYM",
+            "X",
+            "N:G",
+            "VERB:G",
+            "NY",
+            "N",
+            "NB",
+            "NNP",
+            "NNPy",
+            "V",
+            "VERB",
+            "Num",
+            "NUMx",
+            "NUM",
+            "NUMX",
         }
+
         if tags[0] in ignores_tags:
             continue
         if word not in dict:

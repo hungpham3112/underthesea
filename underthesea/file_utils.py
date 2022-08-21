@@ -37,10 +37,12 @@ def cached_path(url_or_filename: str, cache_dir: Path) -> Path:
         return Path(url_or_filename)
     elif parsed.scheme == '':
         # File, but it doesn't exist.
-        raise FileNotFoundError("file {} not found".format(url_or_filename))
+        raise FileNotFoundError(f"file {url_or_filename} not found")
     else:
         # Something unknown
-        raise ValueError("unable to parse {} as a URL or as a local path".format(url_or_filename))
+        raise ValueError(
+            f"unable to parse {url_or_filename} as a URL or as a local path"
+        )
 
 
 # TODO(joelgrus): do we want to do checksums or anything like that?
@@ -61,12 +63,8 @@ def get_from_cache(url: str, cache_dir: Path = None) -> Path:
     response = requests.head(url)
 
     # (anhv: 27/12/2020) github release assets return 302
-    if response.status_code not in [200, 302]:
-        if "www.dropbox.com" in url:
-            # dropbox return code 301, so we ignore this error
-            pass
-        else:
-            raise IOError("HEAD request failed for url {}".format(url))
+    if response.status_code not in [200, 302] and "www.dropbox.com" not in url:
+        raise IOError(f"HEAD request failed for url {url}")
 
     # add ETag to filename if it exists
     # etag = response.headers.get("ETag")
@@ -115,10 +113,7 @@ class Tqdm:
         but it is not great for log files.  You might want to set this if you are primarily going
         to be looking at output through log files, not the terminal.
         """
-        if use_slower_interval:
-            Tqdm.default_mininterval = 10.0
-        else:
-            Tqdm.default_mininterval = 0.1
+        Tqdm.default_mininterval = 10.0 if use_slower_interval else 0.1
 
     @staticmethod
     def tqdm(*args, **kwargs):

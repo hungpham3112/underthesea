@@ -2,7 +2,7 @@ from os.path import join, dirname
 from underthesea.reader.dictionary_loader import DictionaryLoader
 
 words = DictionaryLoader(join(dirname(__file__), "Viet74K.txt")).words
-lower_words = set([word.lower() for word in words])
+lower_words = {word.lower() for word in words}
 
 
 def text_lower(word):
@@ -14,10 +14,7 @@ def text_isdigit(word):
 
 
 def text_isallcap(word):
-    for letter in word:
-        if not letter.istitle():
-            return False
-    return True
+    return all(letter.istitle() for letter in word)
 
 
 def text_istitle(word):
@@ -25,10 +22,7 @@ def text_istitle(word):
         return False
     try:
         titles = [s[0] for s in word.split(" ")]
-        for token in titles:
-            if token[0].istitle() is False:
-                return False
-        return True
+        return all(token[0].istitle() is not False for token in titles)
     except Exception:
         return False
 

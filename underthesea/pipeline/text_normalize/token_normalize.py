@@ -11,6 +11,4 @@ def token_normalize(token, use_character_normalize=True):
     # character normalize
     if use_character_normalize:
         token = normalize_characters_in_text(token)
-    if token in token_map:
-        return token_map[token]
-    return token
+    return token_map[token] if token in token_map else token

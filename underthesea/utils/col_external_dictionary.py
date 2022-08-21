@@ -26,19 +26,16 @@ class Word:
         self.senses = senses
 
     def __str__(self):
-        content = self.word + " "
+        content = f"{self.word} "
         for sense in self.senses:
-            content += sense.tag + ","
+            content += f"{sense.tag},"
         return content
 
     def add_sense(self, sense):
         self.senses.append(sense)
 
     def has_tag(self, tag) -> bool:
-        for sense in self.senses:
-            if sense.tag == tag:
-                return True
-        return False
+        return any(sense.tag == tag for sense in self.senses)
 
 
 class Cache:
@@ -55,9 +52,7 @@ class Cache:
         return key in self.data
 
     def get(self, key):
-        if key in self.data:
-            return self.data[key]
-        return None
+        return self.data[key] if key in self.data else None
 
     @staticmethod
     def load(file):
@@ -80,10 +75,9 @@ class VLSPDictionary:
 
     @staticmethod
     def lookup(keyword, cache=None):
-        if cache:
-            if cache.contains(keyword):
-                return cache.get(keyword)
-        logger.info('request ' + keyword)
+        if cache and cache.contains(keyword):
+            return cache.get(keyword)
+        logger.info(f'request {keyword}')
         url = "https://vlsp.hpda.vn/demo/?page=vcl"
         payload = {"word": keyword}
         r = requests.post(url, data=payload)

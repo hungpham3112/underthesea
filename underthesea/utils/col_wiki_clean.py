@@ -14,11 +14,7 @@ os.makedirs(CLEANED_FOLDER, exist_ok=True)
 
 
 def check_line(line):
-    if len(line) < 30:
-        return False
-    if line.startswith("<"):
-        return False
-    return True
+    return False if len(line) < 30 else not line.startswith("<")
 
 
 def clean(file):

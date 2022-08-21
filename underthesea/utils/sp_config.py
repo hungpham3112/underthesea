@@ -11,14 +11,18 @@ class Config(object):
 
         config = ConfigParser()
         config.read(conf or [])
-        self.update({**dict((name, literal_eval(value))
-                            for section in config.sections()
-                            for name, value in config.items(section)),
-                     **kwargs})
+        self.update(
+            {
+                name: literal_eval(value)
+                for section in config.sections()
+                for name, value in config.items(section)
+            }
+            | kwargs
+        )
 
     def __repr__(self):
         s = line = "-" * 15 + "-+-" + "-" * 25 + "\n"
-        s += f"{'Param':15} | {'Value':^25}\n" + line
+        s += f"{'Param':15} | {'Value':^25}\n{line}"
         for name, value in vars(self).items():
             s += f"{name:15} | {str(value):^25}\n"
         s += line
@@ -43,7 +47,7 @@ class Config(object):
     def update(self, kwargs):
         for key in ('self', 'cls', '__class__'):
             kwargs.pop(key, None)
-        kwargs.update(kwargs.pop('kwargs', dict()))
+        kwargs.update(kwargs.pop('kwargs', {}))
         for name, value in kwargs.items():
             setattr(self, name, value)
 

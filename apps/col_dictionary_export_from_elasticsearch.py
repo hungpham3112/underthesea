@@ -37,14 +37,13 @@ if __name__ == '__main__':
     index_name = "dictionary"
     with open(DICTIONARY_FILE, "w") as f:
         f.write("")
-    f = open(DICTIONARY_FILE, "a")
-    i = 0
-    for res in query_doc(es, index_name):
-        docs = res["hits"]["hits"]
-        print(len(docs))
-        doc_content = extract_dictionary_from_elasticsearch(docs)
-        if len(doc_content) > 1:
-            dict_content = yaml.dump(doc_content, allow_unicode=True, sort_keys=True)
-            f.write(dict_content)
-            i += 1
-    f.close()
+    with open(DICTIONARY_FILE, "a") as f:
+        i = 0
+        for res in query_doc(es, index_name):
+            docs = res["hits"]["hits"]
+            print(len(docs))
+            doc_content = extract_dictionary_from_elasticsearch(docs)
+            if len(doc_content) > 1:
+                dict_content = yaml.dump(doc_content, allow_unicode=True, sort_keys=True)
+                f.write(dict_content)
+                i += 1

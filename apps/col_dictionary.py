@@ -40,8 +40,11 @@ if __name__ == '__main__':
     </style>""", unsafe_allow_html=True)
 
     placeholder = st.sidebar.empty()
-    search_text_box = placeholder.text_input('Word', value=st.session_state['current_word'], key='sidebar_text_input')
-    if search_text_box:
+    if search_text_box := placeholder.text_input(
+        'Word',
+        value=st.session_state['current_word'],
+        key='sidebar_text_input',
+    ):
         switch_word(search_text_box)
 
     buttons = {}
@@ -55,6 +58,5 @@ if __name__ == '__main__':
 
     output_data = json_viewer(json_object=data, label=0)
 
-    save_button = st.button('Save')
-    if save_button:
+    if save_button := st.button('Save'):
         dictionary.save(st.session_state['current_word'], output_data)

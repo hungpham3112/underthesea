@@ -24,13 +24,7 @@ KNOWN_POS = {
     'n': 'NOUN',
     'S': 'NOUN'  # khối
 }
-TEMP_IGNORE_POS = set([
-    'R',  # phụ từ tiếng Việt
-    'X',  # không phân loại
-    'Z',  # yếu tố cấu tạo từ
-    'D',  # không có định nghĩa (ví dụ: chút ít)
-    'O',  # úi chà
-])
+TEMP_IGNORE_POS = {'R', 'X', 'Z', 'D', 'O'}
 logger.info("Start loading")
 dict = Dictionary()
 pos_count = {}
@@ -45,7 +39,7 @@ for key in data:
     defs = []
     pos_tags = {}
     text = key
-    for definition in data[key]:
+    for definition in data[text]:
         pos_tag = definition['pos']
         if pos_tag not in pos_tags:
             i = len(pos_tags)

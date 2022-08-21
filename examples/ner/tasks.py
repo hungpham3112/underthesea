@@ -51,20 +51,19 @@ class NER(TokenClassificationTask):
                 if not preds_list[example_id]:
                     example_id += 1
             elif preds_list[example_id]:
-                output_line = line.split()[0] + " " + preds_list[example_id].pop(0) + "\n"
+                output_line = f"{line.split()[0]} {preds_list[example_id].pop(0)}" + "\n"
                 writer.write(output_line)
             else:
                 logger.warning("Maximum sequence length exceeded: No prediction for '%s'.", line.split()[0])
 
     def get_labels(self, path: str) -> List[str]:
-        if path:
-            with open(path, "r") as f:
-                labels = f.read().splitlines()
-            if "O" not in labels:
-                labels = ["O"] + labels
-            return labels
-        else:
+        if not path:
             return ["O", "B-MISC", "I-MISC", "B-PER", "I-PER", "B-ORG", "I-ORG", "B-LOC", "I-LOC"]
+        with open(path, "r") as f:
+            labels = f.read().splitlines()
+        if "O" not in labels:
+            labels = ["O"] + labels
+        return labels
 
 
 class Chunk(NER):
@@ -73,13 +72,7 @@ class Chunk(NER):
         super().__init__(label_idx=-2)
 
     def get_labels(self, path: str) -> List[str]:
-        if path:
-            with open(path, "r") as f:
-                labels = f.read().splitlines()
-            if "O" not in labels:
-                labels = ["O"] + labels
-            return labels
-        else:
+        if not path:
             return [
                 "O",
                 "B-ADVP",
@@ -103,6 +96,11 @@ class Chunk(NER):
                 "I-CONJP",
                 "I-PP",
             ]
+        with open(path, "r") as f:
+            labels = f.read().splitlines()
+        if "O" not in labels:
+            labels = ["O"] + labels
+        return labels
 
 
 class POS(TokenClassificationTask):
@@ -127,15 +125,17 @@ class POS(TokenClassificationTask):
         return examples
 
     def write_predictions_to_file(self, writer: TextIO, test_input_reader: TextIO, preds_list: List):
-        example_id = 0
-        for sentence in parse_incr(test_input_reader):
+        for example_id, sentence in enumerate(parse_incr(test_input_reader)):
             s_p = preds_list[example_id]
-            out = ""
-            for token in sentence:
-                out += f'{token["form"]} ({token["upos"]}|{s_p.pop(0)}) '
-            out += "\n"
+            out = (
+                "".join(
+                    f'{token["form"]} ({token["upos"]}|{s_p.pop(0)}) '
+                    for token in sentence
+                )
+                + "\n"
+            )
+
             writer.write(out)
-            example_id += 1
 
     def get_labels(self, path: str) -> List[str]:
         if path:

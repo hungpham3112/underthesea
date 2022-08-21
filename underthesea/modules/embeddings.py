@@ -14,10 +14,7 @@ class WordEmbeddings(torch.nn.Module):
     @classmethod
     def fit(cls, sentences):
         n_word = 100
-        embed = cls(
-            n_word=n_word
-        )
-        return embed
+        return cls(n_word=n_word)
 
 
 class CharacterEmbeddings(torch.nn.Module):
@@ -41,8 +38,7 @@ class FieldEmbeddings:
         self._n_vocab = val
 
     def __repr__(self):
-        s = f"{self.__class__.__name__}(n_vocab={self._n_vocab})"
-        return s
+        return f"{self.__class__.__name__}(n_vocab={self._n_vocab})"
 
 
 class TokenEmbeddings(torch.nn.Module):

@@ -35,9 +35,7 @@ class CRFChunkingPredictor:
         tokens = [(tokens[0], tokens[1], "X") for tokens in sentence]
         x = self.transformer.transform([tokens])[0][0]
         tags = self.model.tag(x)
-        output = [(tokens[0], tokens[1], tag) for tokens, tag in
-                  zip(sentence, tags)]
-        return output
+        return [(tokens[0], tokens[1], tag) for tokens, tag in zip(sentence, tags)]
 
 
 class TaggedTransformer:

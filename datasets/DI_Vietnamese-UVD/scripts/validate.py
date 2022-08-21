@@ -6,10 +6,8 @@ from termcolor import colored
 
 def warn(file, line_number, message, type=None):
     global total_errors
-    text = ""
-    if type:
-        text = f"[{type}] "
-    text += basename(file) + ":" + str(line_number)
+    text = f"[{type}] " if type else ""
+    text += f"{basename(file)}:{str(line_number)}"
     if total_errors < MAX_SHOW_ERRORS:
         print(colored(text, 'red'), colored(message, 'red'))
 
@@ -73,6 +71,6 @@ if __name__ == '__main__':
         print("\n# DICTIONARY STATISTICS")
         global NUM_WORDS
         print("* Number of words:", NUM_WORDS)
-        print("* Tags:", len(VALID_TAGS), "(" + str(sorted(VALID_TAGS))[1:-1] + ")")
+        print("* Tags:", len(VALID_TAGS), f"({str(sorted(VALID_TAGS))[1:-1]})")
 
     stats()

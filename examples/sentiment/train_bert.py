@@ -41,12 +41,11 @@ class UITABSADataset(Dataset):
             else:
                 hot_encoding.append(0.0)
         label_hot_encoding = torch.FloatTensor(hot_encoding)
-        output = dict(
+        return dict(
             input_ids=encoded["input_ids"],
             attention_mask=encoded["attention_mask"],
             labels=label_hot_encoding,
         )
-        return output
 
 
 class UITABSADataModule(pl.LightningDataModule):
@@ -58,12 +57,14 @@ class UITABSADataModule(pl.LightningDataModule):
         self.batch_size = batch_size
 
     def train_dataloader(self):
-        output = DataLoader(self.train_dataset, self.batch_size, shuffle=True, drop_last=True)
-        return output
+        return DataLoader(
+            self.train_dataset, self.batch_size, shuffle=True, drop_last=True
+        )
 
     def val_dataloader(self):
-        output = DataLoader(self.val_dataset, self.batch_size, shuffle=True, drop_last=True)
-        return output
+        return DataLoader(
+            self.val_dataset, self.batch_size, shuffle=True, drop_last=True
+        )
 
     def test_dataloader(self):
         return DataLoader(self.test_dataset, self.batch_size, shuffle=False, drop_last=True)
@@ -80,11 +81,12 @@ class RobertaForABSA(BertPreTrainedModel):
 
     def forward(self, input_ids, attention_mask=None, token_type_ids=None, position_ids=None, head_mask=None,
                 start_positions=None, end_positions=None):
-        outputs = self.roberta(input_ids,
-                               attention_mask=attention_mask,
-                               position_ids=position_ids,
-                               head_mask=head_mask)
-        return outputs
+        return self.roberta(
+            input_ids,
+            attention_mask=attention_mask,
+            position_ids=position_ids,
+            head_mask=head_mask,
+        )
 
 
 class BertForMultilabelClassification(pl.LightningModule):
@@ -103,9 +105,7 @@ class BertForMultilabelClassification(pl.LightningModule):
         output = self.roberta(input_ids.squeeze())
         output = self.classifier(output.pooler_output)
         output = torch.sigmoid(output)
-        loss = 0
-        if labels is not None:
-            loss = self.criterion(output, labels)
+        loss = self.criterion(output, labels) if labels is not None else 0
         return loss, output
 
     def training_step(self, batch, batch_idx):
@@ -139,8 +139,7 @@ class BertForMultilabelClassification(pl.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = AdamW(self.parameters(), lr=2e-5)
-        return optimizer
+        return AdamW(self.parameters(), lr=2e-5)
 
 
 def main():

@@ -14,9 +14,8 @@ class NumberRemover:
 
         if sys.version_info < (3, 0, 0):
             return document.translate(None, numbers)
-        else:
-            remover = str.maketrans("", "", numbers)
-            return document.translate(remover)
+        remover = str.maketrans("", "", numbers)
+        return document.translate(remover)
 
     def transform(self, raw_documents):
         """

@@ -42,8 +42,7 @@ class CRFModel:
     def instance(cls, model_path=None):
         if model_path not in cls.objects:
             cls.objects[model_path] = cls(model_path)
-        object = cls.objects[model_path]
-        return object
+        return cls.objects[model_path]
 
     def predict(self, sentence, format=None):
         tokens = [(token, "X") for token in sentence]

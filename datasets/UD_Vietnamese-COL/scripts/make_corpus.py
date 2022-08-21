@@ -17,8 +17,7 @@ def add_lemma_column(sentence):
             tokens.insert(1, lemma)
             new_row = "\t".join(tokens)
             result.append(new_row)
-    new_sentence = "\n".join(result)
-    return new_sentence
+    return "\n".join(result)
 
 
 filepath = join(dirname(dirname(__file__)), "corpus", "ud", "202108.txt")

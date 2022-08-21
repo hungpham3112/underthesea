@@ -27,8 +27,10 @@ class Vocab(object):
 
     def __init__(self, counter, min_freq=1, specials=[], unk_index=0):
         self.itos = list(specials)
-        self.stoi = defaultdict(lambda: unk_index)
-        self.stoi.update({token: i for i, token in enumerate(self.itos)})
+        self.stoi = defaultdict(lambda: unk_index) | {
+            token: i for i, token in enumerate(self.itos)
+        }
+
         self.extend([token for token, freq in counter.items()
                      if freq >= min_freq])
         self.unk_index = unk_index
@@ -59,7 +61,7 @@ class Vocab(object):
 
     def __setstate__(self, state):
         stoi = defaultdict(lambda: self.unk_index)
-        stoi.update(state['stoi'])
+        stoi |= state['stoi']
         state['stoi'] = stoi
         self.__dict__.update(state)
 

@@ -41,8 +41,7 @@ class CRFModel:
     def instance(cls, model_path=None):
         if model_path not in cls.objects:
             cls.objects[model_path] = cls(model_path)
-        object = cls.objects[model_path]
-        return object
+        return cls.objects[model_path]
 
     def predict(self, sentence, format=None):
         tokens = [(token, "X") for token in sentence]
@@ -87,7 +86,7 @@ def word_tokenize(sentence, format=None):
     output = []
     for tag, token in zip(tags, tokens):
         if tag == "I-W":
-            output[-1] = output[-1] + u" " + token
+            output[-1] = f"{output[-1]} {token}"
         else:
             output.append(token)
     if format == "text":

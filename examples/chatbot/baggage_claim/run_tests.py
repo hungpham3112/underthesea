@@ -42,9 +42,7 @@ class ChatUser:
         payload = {'sender': self.id, 'message': 'hey there'}
         headers = {'content-type': 'application/json'}
         r = requests.post('http://localhost:5005/webhooks/rest/webhook', json=payload, headers=headers)
-        if r is None:
-            return None
-        return r.json()
+        return None if r is None else r.json()
 
 
 if __name__ == '__main__':

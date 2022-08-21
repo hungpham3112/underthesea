@@ -25,14 +25,13 @@ class LabelEncoder:
         if type(labels) == list:
             return [self.encode(label) for label in labels]
         label = labels  # label is a string
-        if label not in self.label2index:
-            index = self.vocab_size
-            self.label2index[label] = index
-            self.index2label[index] = label
-            self.vocab_size += 1
-            return index
-        else:
+        if label in self.label2index:
             return self.label2index[label]
+        index = self.vocab_size
+        self.label2index[label] = index
+        self.index2label[index] = label
+        self.vocab_size += 1
+        return index
 
 
 class TokenClassificationCorpus:
@@ -187,8 +186,7 @@ class BertForTokenClassification(pl.LightningModule):
         self.log('test_loss', loss)
 
     def configure_optimizers(self):
-        optimizer = AdamW(self.parameters(), lr=2e-5)
-        return optimizer
+        return AdamW(self.parameters(), lr=2e-5)
 
 
 def main():

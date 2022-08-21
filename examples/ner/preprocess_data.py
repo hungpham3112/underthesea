@@ -26,9 +26,9 @@ def transform(src_file, dest_file):
         f.write(content)
 
 
+max_len = 0
 for file in ["train.txt", "test.txt", "dev.txt"]:
     print(file)
-    max_len = 0
     src_folder = join("bert-ner", "data", "vlsp2016")
     dest_folder = join("bert-ner", "data")
     transform(src_file=join(src_folder, file), dest_file=join(dest_folder, file))

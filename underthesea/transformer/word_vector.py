@@ -57,8 +57,7 @@ class WordVectorTransformer(Transformer):
         if is_fit:
             self.max_length = max(self.max_length, max_length_doc)
             self._update_vocab(vocab)
-        output = [self._doc2index(document) for document in documents]
-        return output
+        return [self._doc2index(document) for document in documents]
 
     def fit_transform(self, raw_documents):
         return self._transform(raw_documents, is_fit=True)

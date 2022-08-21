@@ -60,8 +60,11 @@ def fetch_public_key(repo):
     keyurl = 'https://api.travis-ci.org/repos/{0}/key'.format(repo)
     data = json.loads(urlopen(keyurl).read().decode())
     if 'key' not in data:
-        errmsg = "Could not find public key for repo: {}.\n".format(repo)
-        errmsg += "Have you already added your GitHub repo to Travis?"
+        errmsg = (
+            f"Could not find public key for repo: {repo}.\n"
+            + "Have you already added your GitHub repo to Travis?"
+        )
+
         raise ValueError(errmsg)
     return data['key']
 
@@ -110,11 +113,15 @@ def main(args):
     print("Wrote encrypted password to .travis.yml -- you're ready to deploy")
 
 
-if '__main__' == __name__:
+if __name__ == '__main__':
     import argparse
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--repo', default=GITHUB_REPO,
-                        help='GitHub repo (default: %s)' % GITHUB_REPO)
+    parser.add_argument(
+        '--repo',
+        default=GITHUB_REPO,
+        help=f'GitHub repo (default: {GITHUB_REPO})',
+    )
+
     parser.add_argument('--password',
                         help='PyPI password (will prompt if not provided)')
 

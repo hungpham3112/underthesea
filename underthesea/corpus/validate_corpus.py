@@ -7,7 +7,7 @@ from underthesea.feature_engineering.text import Text
 from underthesea.file_utils import DATASETS_FOLDER
 from underthesea.pipeline.word_tokenize import tokenize
 
-SUPPORTED_CORPUS_TYPE = set(["TOKENIZE"])
+SUPPORTED_CORPUS_TYPE = {"TOKENIZE"}
 
 error_count = 0
 DEFAULT_MAX_ERROR = 30
@@ -65,7 +65,7 @@ def validate_utf8(file):
             else:
                 break
     results = charset_normalizer.from_bytes(text).best()
-    if not (results.encoding == "utf-8" and results.coherence >= 0.99):
+    if results.encoding != "utf-8" or results.coherence < 0.99:
         warn(message=f"File {file} should encoding with UTF-8", level=1)
         sys.exit(1)
     with open(file, "r") as f:
@@ -151,13 +151,13 @@ def validate_token(sentence, i_end, file):
     tokenized_tokens = tokenize(text)
     if tokenized_tokens != content_tokens:
         if len(text) > 53:
-            message = "tokenized error for text: " + text[:50] + "..."
+            message = f"tokenized error for text: {text[:50]}..."
         else:
-            message = "tokenized error for text: " + text
+            message = f"tokenized error for text: {text}"
         message += '\n'
-        message += '  Actual:' + str(content_tokens)
+        message += f'  Actual:{content_tokens}'
         message += '\n'
-        message += 'Expected:' + str(tokenized_tokens)
+        message += f'Expected:{str(tokenized_tokens)}'
         warn(message=message,
              error_type="Format tokenize-error",
              file=base_name, line_number=i_start, level=3, sent_id=sent_id)

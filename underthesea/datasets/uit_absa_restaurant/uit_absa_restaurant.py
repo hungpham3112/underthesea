@@ -22,14 +22,13 @@ class LabelEncoder:
         if type(labels) == list:
             return [self.encode(label) for label in labels]
         label = labels  # label is a string
-        if label not in self.label2index:
-            index = self.vocab_size
-            self.label2index[label] = index
-            self.index2label[index] = label
-            self.vocab_size += 1
-            return index
-        else:
+        if label in self.label2index:
             return self.label2index[label]
+        index = self.vocab_size
+        self.label2index[label] = index
+        self.index2label[index] = label
+        self.vocab_size += 1
+        return index
 
 
 class UITABSARestaurant:
@@ -41,7 +40,7 @@ class UITABSARestaurant:
         train_file = join(DATASETS_FOLDER, UITABSARestaurant.NAME, "Train.txt")
         dev_file = join(DATASETS_FOLDER, UITABSARestaurant.NAME, "Dev.txt")
         test_file = join(DATASETS_FOLDER, UITABSARestaurant.NAME, "Test.txt")
-        print("Currently training: %s (aspect or polarity)" % training)
+        print(f"Currently training: {training} (aspect or polarity)")
 
         self.training = training  # aspect or polarity
         self.label_encoder = LabelEncoder()

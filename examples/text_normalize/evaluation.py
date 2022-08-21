@@ -30,8 +30,7 @@ def predict_sentence(s, conf):
                 print(f"{tokens[0]} -> {tokens[1]}")
             new_row = "\t".join(tokens)
             result.append(new_row)
-    new_s = "\n".join(result)
-    return new_s
+    return "\n".join(result)
 
 
 def predict(cfg):

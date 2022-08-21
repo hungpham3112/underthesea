@@ -4,10 +4,58 @@ import string
 import re
 from underthesea.pipeline.word_tokenize import tokenize
 
-negative_emoticons = {':(', '☹', '❌', '👎', '👹', '💀', '🔥', '🤔', '😏', '😐', '😑', '😒', '😓', '😔', '😕', '😖',
-                      '😞', '😟', '😠', '😡', '😢', '😣', '😤', '😥', '😧', '😨', '😩', '😪', '😫', '😭', '😰', '😱',
-                      '😳', '😵', '😶', '😾', '🙁', '🙏', '🚫', '>:[', ':-(', ':(', ':-c', ':c', ':-<', ':っC', ':<',
-                      ':-[', ':[', ':{'}
+negative_emoticons = {
+    '☹',
+    '❌',
+    '👎',
+    '👹',
+    '💀',
+    '🔥',
+    '🤔',
+    '😏',
+    '😐',
+    '😑',
+    '😒',
+    '😓',
+    '😔',
+    '😕',
+    '😖',
+    '😞',
+    '😟',
+    '😠',
+    '😡',
+    '😢',
+    '😣',
+    '😤',
+    '😥',
+    '😧',
+    '😨',
+    '😩',
+    '😪',
+    '😫',
+    '😭',
+    '😰',
+    '😱',
+    '😳',
+    '😵',
+    '😶',
+    '😾',
+    '🙁',
+    '🙏',
+    '🚫',
+    '>:[',
+    ':-(',
+    ':(',
+    ':-c',
+    ':c',
+    ':-<',
+    ':っC',
+    ':<',
+    ':-[',
+    ':[',
+    ':{',
+}
+
 
 positive_emoticons = {'=))', 'v', ';)', '^^', '<3', '☀', '☺', '♡', '♥', '✌', '✨', '❣', '❤', '🌝', '🌷', '🌸',
                       '🌺', '🌼', '🍓', '🎈', '🐅', '🐶', '🐾', '👉', '👌', '👍', '👏', '👻', '💃', '💄', '💋',
@@ -36,12 +84,8 @@ class RemoveTone(BaseEstimator, TransformerMixin):
 
 class CountEmoticons(BaseEstimator, TransformerMixin):
     def count_emoticon(self, s):
-        positive_count = 0
-        negative_count = 0
-        for emoticon in positive_emoticons:
-            positive_count += s.count(emoticon)
-        for emoticon in negative_emoticons:
-            negative_count += s.count(emoticon)
+        positive_count = sum(s.count(emoticon) for emoticon in positive_emoticons)
+        negative_count = sum(s.count(emoticon) for emoticon in negative_emoticons)
         return positive_count, negative_count
 
     def transform(self, x):
@@ -67,13 +111,14 @@ class RemoveDuplicate(BaseEstimator, TransformerMixin):
 class Tokenize(BaseEstimator, TransformerMixin):
     def pun_num(self, s):
         for token in s.split():
-            if token in string.punctuation:
-                if token == '.':
-                    s = s
-                else:
-                    s = s.replace(token, 'punc')
-            else:
+            if (
+                token in string.punctuation
+                and token == '.'
+                or token not in string.punctuation
+            ):
                 s = s
+            else:
+                s = s.replace(token, 'punc')
         return s
 
     def transform(self, x):

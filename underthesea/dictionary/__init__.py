@@ -14,6 +14,4 @@ class Dictionary:
             self.words = pickle.load(f)
 
     def lookup(self, text):
-        if text in self.words:
-            return self.words[text]
-        return None
+        return self.words[text] if text in self.words else None

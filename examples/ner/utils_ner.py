@@ -215,12 +215,13 @@ if is_torch_available():
             # Load data features from cache or dataset file
             cached_features_file = os.path.join(
                 data_dir,
-                "cached_{}_{}_{}".format(mode.value, tokenizer.__class__.__name__, str(max_seq_length)),
+                f"cached_{mode.value}_{tokenizer.__class__.__name__}_{str(max_seq_length)}",
             )
+
 
             # Make sure only the first process in distributed training processes the dataset,
             # and the others will use the cache.
-            lock_path = cached_features_file + ".lock"
+            lock_path = f"{cached_features_file}.lock"
             with FileLock(lock_path):
 
                 if os.path.exists(cached_features_file) and not overwrite_cache:
@@ -230,23 +231,24 @@ if is_torch_available():
                     logger.info(f"Creating features from dataset file at {data_dir}")
                     examples = token_classification_task.read_examples_from_file(data_dir, mode)
                     # TODO clean up all this to leverage built-in features of tokenizers
-                    self.features = token_classification_task.convert_examples_to_features(
-                        examples,
-                        labels,
-                        max_seq_length,
-                        tokenizer,
-                        cls_token_at_end=bool(model_type in ["xlnet"]),
-                        # xlnet has a cls token at the end
-                        cls_token=tokenizer.cls_token,
-                        cls_token_segment_id=2 if model_type in ["xlnet"] else 0,
-                        sep_token=tokenizer.sep_token,
-                        sep_token_extra=False,
-                        # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
-                        pad_on_left=bool(tokenizer.padding_side == "left"),
-                        pad_token=tokenizer.pad_token_id,
-                        pad_token_segment_id=tokenizer.pad_token_type_id,
-                        pad_token_label_id=self.pad_token_label_id,
+                    self.features = (
+                        token_classification_task.convert_examples_to_features(
+                            examples,
+                            labels,
+                            max_seq_length,
+                            tokenizer,
+                            cls_token_at_end=model_type in {"xlnet"},
+                            cls_token=tokenizer.cls_token,
+                            cls_token_segment_id=2 if model_type in {"xlnet"} else 0,
+                            sep_token=tokenizer.sep_token,
+                            sep_token_extra=False,
+                            pad_on_left=tokenizer.padding_side == "left",
+                            pad_token=tokenizer.pad_token_id,
+                            pad_token_segment_id=tokenizer.pad_token_type_id,
+                            pad_token_label_id=self.pad_token_label_id,
+                        )
                     )
+
                     logger.info(f"Saving features into cached file {cached_features_file}")
                     torch.save(self.features, cached_features_file)
 
@@ -289,18 +291,17 @@ if is_tf_available():
                 labels,
                 max_seq_length,
                 tokenizer,
-                cls_token_at_end=bool(model_type in ["xlnet"]),
-                # xlnet has a cls token at the end
+                cls_token_at_end=model_type in {"xlnet"},
                 cls_token=tokenizer.cls_token,
-                cls_token_segment_id=2 if model_type in ["xlnet"] else 0,
+                cls_token_segment_id=2 if model_type in {"xlnet"} else 0,
                 sep_token=tokenizer.sep_token,
                 sep_token_extra=False,
-                # roberta uses an extra separator b/w pairs of sentences, cf. github.com/pytorch/fairseq/commit/1684e166e3da03f5b600dbb7855cb98ddfcd0805
-                pad_on_left=bool(tokenizer.padding_side == "left"),
+                pad_on_left=tokenizer.padding_side == "left",
                 pad_token=tokenizer.pad_token_id,
                 pad_token_segment_id=tokenizer.pad_token_type_id,
                 pad_token_label_id=self.pad_token_label_id,
             )
+
 
             def gen():
                 for ex in self.features:

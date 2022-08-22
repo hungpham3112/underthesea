@@ -32,7 +32,7 @@ n_sentences = 1000
 max_tokens = 200
 words = ["Messi", "đạt", "giải", "quả", "bóng", "vàng"]
 sentences = []
-for i in range(n_sentences):
+for _ in range(n_sentences):
     word = choice(words)
     sentence = [[word, "X"]] * max_tokens
     sentences.append(sentence)

@@ -13,21 +13,15 @@ os.makedirs(UD_FOLDER, exist_ok=True)
 
 
 def check_line(line):
-    if len(line) < 30:
-        return False
-    if line.startswith("<"):
-        return False
-    return True
+    return False if len(line) < 30 else not line.startswith("<")
 
 
 def make_ud_file(file):
     logger.info(msg=file)
     sentences = []
-    i = 0
-    for line in open(join(CLEANED_FOLDER, file)):
+    for i, line in enumerate(open(join(CLEANED_FOLDER, file)), start=1):
         s = UDSentence.load_from_raw_text(line)
         sentences.append(s)
-        i += 1
         if i % 200 == 0:
             logger.info(f"{file}:{i}")
     ud_dataset = UDDataset(sentences)

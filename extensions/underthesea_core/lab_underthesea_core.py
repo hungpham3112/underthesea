@@ -12,7 +12,7 @@ feature_configs = [
     "T[0]", "T[1]", "T[2]",
     "T[0,1].is_in_dict"
 ]
-dictionary = set(["Chàng", "trai", "trường học"])
+dictionary = {"Chàng", "trai", "trường học"}
 
 # print("Call featurizer function")
 # print(featurizer(sentences, feature_configs, dictionary))

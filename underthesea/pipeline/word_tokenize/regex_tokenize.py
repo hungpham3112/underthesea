@@ -22,7 +22,7 @@ UPPER = "[" + "".join([
     "ỲÝỶỸỴ"
 ]) + "]"
 LOWER = UPPER.lower()
-W = "[" + UPPER[1:-1] + LOWER[1:-1] + "]"  # upper and lower
+W = f"[{UPPER[1:-1]}{LOWER[1:-1]}]"
 
 #################################################
 # PRIORITY 1                                    #
@@ -108,10 +108,10 @@ url = r"""             # Capture 1: entire matched URL
                            # avoid matching "foo.na" in "foo.na@example.com"
   )
 """
-url = "(?P<url>" + url + ")"
+url = f"(?P<url>{url})"
 
 email = r"[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+"
-email = "(?P<email>" + email + ")"
+email = f"(?P<email>{email})"
 
 phone = [
     r"\d{2,}-\d{3,}-\d{3,}"  # e.g. 03-5730-2357
@@ -240,7 +240,7 @@ def tokenize(text, format=None, tag=False, use_character_normalize=True, use_tok
     """
     if use_character_normalize:
         text = normalize_characters_in_text(text)
-    matches = [m for m in re.finditer(patterns, text)]
+    matches = list(re.finditer(patterns, text))
     tokens = [extract_match(m) for m in matches]
 
     if tag:
@@ -250,7 +250,4 @@ def tokenize(text, format=None, tag=False, use_character_normalize=True, use_tok
     if use_token_normalize:
         tokens = [token_normalize(_, use_character_normalize=use_character_normalize) for _ in tokens]
 
-    if format == "text":
-        return " ".join(tokens)
-
-    return tokens
+    return " ".join(tokens) if format == "text" else tokens

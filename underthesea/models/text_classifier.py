@@ -33,10 +33,7 @@ class TextClassifier(Model):
         if estimator == TEXT_CLASSIFIER_ESTIMATOR.SVC:
             self.svc = None
         if estimator == TEXT_CLASSIFIER_ESTIMATOR.PIPELINE:
-            if "pipeline" in params:
-                self.pipeline = params["pipeline"]
-            else:
-                self.pipeline = None
+            self.pipeline = params.get("pipeline")
 
     @staticmethod
     def load(model_folder):
@@ -67,10 +64,9 @@ class TextClassifier(Model):
 
         if estimator == TEXT_CLASSIFIER_ESTIMATOR.PIPELINE:
             classifier = TextClassifier(estimator=TEXT_CLASSIFIER_ESTIMATOR.PIPELINE)
-            if "multilabel" in metadata:
-                if metadata["multilabel"]:
-                    classifier.multilabel = True
-                    classifier.y_encoder = joblib.load(join(model_folder, "y_encoder.joblib"))
+            if "multilabel" in metadata and metadata["multilabel"]:
+                classifier.multilabel = True
+                classifier.y_encoder = joblib.load(join(model_folder, "y_encoder.joblib"))
             classifier.pipeline = joblib.load(join(model_folder, "pipeline.joblib"))
 
             return classifier

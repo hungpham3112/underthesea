@@ -25,7 +25,7 @@ try:
 except NameError:
     __version__ = 'unknown (running code interactively?)'
 except IOError as ex:
-    __version__ = "unknown (%s)" % ex
+    __version__ = f"unknown ({ex})"
 
 ###########################################################
 # TOP-LEVEL MODULES

@@ -9,9 +9,7 @@ if __name__ == '__main__':
     es = Elasticsearch()
 
     words = yaml.safe_load(content)
-    i = 0
-    for word_key, value in words.items():
-        i += 1
+    for i, (word_key, value) in enumerate(words.items(), start=1):
         data = {
             "headword": word_key,
             "senses": value

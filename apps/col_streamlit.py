@@ -42,9 +42,7 @@ def find_word(ud_dataset, word) -> list:
 st.write('Loaded corpus: wiki')
 st.write(f'Loaded dictionary: {dictionary_n_words} words (202108.yaml)')
 
-word = st.text_input('Word')
-
-if word:
+if word := st.text_input('Word'):
     sentences = find_word(ud_dataset, word)
     st.write(f"## {word}")
     st.write("Output:")

@@ -22,14 +22,12 @@ class GPT2TextClassification(pl.LightningModule):
         self.valid_f1 = F1(mdmc_average='global')
 
     def forward(self, input_ids, labels=None):
-        loss = 0
         gpt2_outputs = self.gpt2(input_ids)
         hidden_states = gpt2_outputs[0].squeeze()
         logits = self.logit(self.linear(hidden_states))
         batch_size, sequence_length = input_ids.shape[:2]
         logits = logits[range(batch_size), sequence_length]
-        if labels is not None:
-            loss = self.criterion(logits, labels)
+        loss = self.criterion(logits, labels) if labels is not None else 0
         return loss, logits
 
     def training_step(self, batch, batch_idx):
@@ -50,8 +48,7 @@ class GPT2TextClassification(pl.LightningModule):
         self.log('valid_f1', self.valid_f1, on_step=True, on_epoch=True)
 
     def configure_optimizers(self):
-        optimizer = SGD(self.parameters(), lr=1e-6)
-        return optimizer
+        return SGD(self.parameters(), lr=1e-6)
 
 
 @hydra.main(config_path="configs/", config_name="config.yaml")

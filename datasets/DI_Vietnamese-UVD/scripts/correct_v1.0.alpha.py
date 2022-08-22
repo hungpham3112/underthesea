@@ -36,8 +36,7 @@ def tag_correct(data):
             tag = node['tag']
             if tag in TAG_MAP:
                 correct_data[word][i]['tag'] = TAG_MAP[tag]
-            # case for word 'khối'
-            if word == 'khối' and node['tag'] == 'S':
+            if word == 'khối' and tag == 'S':
                 correct_data[word][i]['tag'] = 'adjective'
     return correct_data
 

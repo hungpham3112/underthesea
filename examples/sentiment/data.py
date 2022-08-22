@@ -31,12 +31,7 @@ class MultiLabelClassificationDataset(Dataset):
             else:
                 hot_encoding.append(0.0)
         label_hot_encoding = torch.FloatTensor(hot_encoding)
-        output = dict(
-            text=text,
-            label=label_hot_encoding,
-            input_ids=input_ids
-        )
-        return output
+        return dict(text=text, label=label_hot_encoding, input_ids=input_ids)
 
 
 class MultiLabelClassificationDatamodule(pl.LightningDataModule):
@@ -45,9 +40,7 @@ class MultiLabelClassificationDatamodule(pl.LightningDataModule):
         self.corpus = corpus
         # num_labels = corpus.num_labels
         num_labels = corpus.num_aspect_labels
-        samples = None
-        if "samples" in kwargs:
-            samples = kwargs["samples"]
+        samples = kwargs.get("samples")
         del kwargs["samples"]
         self.dataset_kwargs = {
             "tokenizer": tokenizer,

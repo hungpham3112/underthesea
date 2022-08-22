@@ -18,13 +18,13 @@ def compare_two_tools():
     df = pd.DataFrame(columns=["word", "lower", "other", "uts", "group", "miss_spell"])
     with open(TOKENS_ANALYSE_FILE) as f:
         data = {}
-        for i, line in enumerate(f):
+        for line in f:
             word, freq = line.split("\t\t")
             other_words = Normalizer.normalize(word)
             uts_words = text_normalize(word)
             if word != "nghiêng" and len(word) > 6:
                 continue
-            if other_words != word and other_words != uts_words:
+            if other_words not in [word, uts_words]:
                 analysable_word = AnalysableWord(word)
                 data[analysable_word] = {
                     "other": other_words,

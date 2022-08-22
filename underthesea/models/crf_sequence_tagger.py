@@ -34,5 +34,4 @@ class CRFSequenceTagger:
     def predict(self, tokens):
         tokens = [(token, "X") for token in tokens]
         x = self.transformer.transform([tokens])[0]
-        tags = self.estimator.tag(x)
-        return tags
+        return self.estimator.tag(x)

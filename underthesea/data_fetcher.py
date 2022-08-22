@@ -70,7 +70,7 @@ class DataFetcher:
             print(f"Resource {data} is already existed in: {filepath}")
             return
 
-        if data in set(["VNESES", "VNTQ_SMALL", "VNTQ_BIG"]):
+        if data in {"VNESES", "VNTQ_SMALL", "VNTQ_BIG"}:
             DataFetcher.download_raw_file_to_cache(repo_data)
 
         zip_datasets = [
@@ -98,9 +98,8 @@ class DataFetcher:
             license = REPO[key]["license"]
             year = REPO[key]["year"]
             directory = REPO[key]["cache_dir"]
-            if not all:
-                if license == "Close":
-                    continue
+            if not all and license == "Close":
+                continue
             if license == "Close":
                 license = "Close*"
             datasets.append([name, type, license, year, directory])
@@ -183,8 +182,7 @@ class DataFetcher:
         else:
             sentences_train, sentences_dev = DataFetcher.__sample(sentences_train)
         sentences_test: List[Sentence] = DataFetcher.read_text_classification_file(test_file)
-        corpus = CategorizedCorpus(sentences_train, sentences_dev, sentences_test)
-        return corpus
+        return CategorizedCorpus(sentences_train, sentences_dev, sentences_test)
 
     @staticmethod
     def __sample(data: List[Sentence], percentage: float = 0.1):
@@ -200,8 +198,8 @@ class DataFetcher:
         sentences = []
         with open(path_to_file) as f:
             lines = f.read().splitlines()
+            label_pattern = r"__label__(?P<label>[\w#]+)"
             for line in lines:
-                label_pattern = r"__label__(?P<label>[\w#]+)"
                 labels = re.findall(label_pattern, line)
                 labels = [Label(label) for label in labels]
                 text = re.sub(label_pattern, "", line)

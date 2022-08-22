@@ -24,20 +24,14 @@ class Dictionary:
     def load(file):
         with open(file) as f:
             yaml.safe_load(f)
-            new_dict = Dictionary()
-            return new_dict
+            return Dictionary()
 
     def to_data(self):
         data = {}
         words = sorted(self.words)
         for text in words:
             word = self.words[text]
-            if word.data is None:
-                content = ''
-            elif len(word.data) == 0:
-                content = ''
-            else:
-                content = word.data
+            content = '' if word.data is None or len(word.data) == 0 else word.data
             data[text] = content
         return data
 

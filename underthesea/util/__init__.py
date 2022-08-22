@@ -22,20 +22,19 @@ def download_component(component_name):
             zip_folder = join(folder, join(*component["zip_destination"]))
             model_folder = join(folder, join(*component["model_destination"]))
             if exists(model_folder):
-                print("Component '{}' is already existed.".format(component["name"]))
+                print(f"""Component '{component["name"]}' is already existed.""")
             else:
-                print("Start download component '{}'".format(component["name"]))
+                print(f"""Start download component '{component["name"]}'""")
                 print(zip_folder)
                 download_file(component["url"], zip_folder)
                 ZipFile(zip_folder).extractall(model_folder)
                 remove(zip_folder)
-                print("Finish download component '{}'".format(component["name"]))
+                print(f"""Finish download component '{component["name"]}'""")
         except Exception as e:
             print(e)
-            print("Cannot download component '{}'".format(component["name"]))
+            print(f"""Cannot download component '{component["name"]}'""")
     except Exception:
-        message = "Error: Component with name '{}' does not exist.".format(
-            component_name)
+        message = f"Error: Component with name '{component_name}' does not exist."
         print(message)
 
 
@@ -47,5 +46,4 @@ def download_file(url, file_name):
     urlretrieve(url, file_name)
 
 
-if __name__ == '__main__':
-    pass
+pass

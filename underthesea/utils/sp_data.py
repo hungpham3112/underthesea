@@ -82,7 +82,7 @@ class Dataset(torch.utils.data.Dataset):
         self.__dict__.update(state)
 
     def collate_fn(self, batch):
-        return {f: d for f, d in zip(self.fields.keys(), zip(*batch))}
+        return dict(zip(self.fields.keys(), zip(*batch)))
 
     def build(self, batch_size, n_buckets=1, shuffle=False, distributed=False):
         # numericalize all fields
@@ -132,7 +132,7 @@ class Sampler(torch.utils.data.Sampler):
     def __init__(self, buckets, batch_size, shuffle=False, distributed=False):
         self.batch_size = batch_size
         self.shuffle = shuffle
-        self.sizes, self.buckets = zip(*[(size, bucket) for size, bucket in buckets.items()])
+        self.sizes, self.buckets = zip(*list(buckets.items()))
         # number of chunks in each bucket, clipped by range [1, len(bucket)]
         self.chunks = [min(len(bucket), max(round(size * len(bucket) / batch_size), 1))
                        for size, bucket in zip(self.sizes, self.buckets)]

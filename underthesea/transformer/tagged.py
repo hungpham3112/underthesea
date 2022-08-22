@@ -12,12 +12,12 @@ class TaggedTransformer:
         matched = re.match(
             "T\[(?P<index1>\-?\d+)(\,(?P<index2>\-?\d+))?\](\[(?P<column>.*)\])?(\.(?P<function>.*))?",
             template)
-        column = matched.group("column")
+        column = matched["column"]
         column = int(column) if column else 0
-        index1 = int(matched.group("index1"))
-        index2 = matched.group("index2")
+        index1 = int(matched["index1"])
+        index2 = matched["index2"]
         index2 = int(index2) if index2 else None
-        func = matched.group("function")
+        func = matched["function"]
         return index1, index2, column, func, token_syntax
 
     def word2features(self, s):
@@ -26,19 +26,19 @@ class TaggedTransformer:
             tmp = []
             for template in self.templates:
                 index1, index2, column, func, token_syntax = template
-                prefix = "%s=" % token_syntax
+                prefix = f"{token_syntax}="
 
                 if i + index1 < 0:
-                    result = "%sBOS" % prefix
+                    result = f"{prefix}BOS"
                     tmp.append(result)
                     continue
                 if i + index1 >= len(s):
-                    result = "%sEOS" % prefix
+                    result = f"{prefix}EOS"
                     tmp.append(result)
                     continue
                 if index2 is not None:
                     if i + index2 >= len(s):
-                        result = "%sEOS" % prefix
+                        result = f"{prefix}EOS"
                         tmp.append(result)
                         continue
                     tokens = [s[j][column] for j in range(i + index1, i + index2 + 1)]
@@ -48,11 +48,8 @@ class TaggedTransformer:
                         word = s[i + index1][column]
                     except Exception:
                         pass
-                if func is not None:
-                    result = functions[func](word)
-                else:
-                    result = word
-                result = "%s%s" % (prefix, result)
+                result = functions[func](word) if func is not None else word
+                result = f"{prefix}{result}"
                 tmp.append(result)
             features.append(tmp)
         return features

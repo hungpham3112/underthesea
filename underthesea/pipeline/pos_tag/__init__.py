@@ -34,5 +34,4 @@ def pos_tag(sentence, format=None):
     """
     sentence = word_tokenize(sentence)
     crf_model = CRFPOSTagPredictor.Instance()
-    result = crf_model.predict(sentence, format)
-    return result
+    return crf_model.predict(sentence, format)

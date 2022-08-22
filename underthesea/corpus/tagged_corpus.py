@@ -19,8 +19,7 @@ class DataReader:
     def load_tagged_corpus(data_folder, train_file=None, test_file=None):
         train = DataReader.__read_tagged_data(join(data_folder, train_file))
         test = DataReader.__read_tagged_data(join(data_folder, test_file))
-        tagged_corpus = TaggedCorpus(train, test)
-        return tagged_corpus
+        return TaggedCorpus(train, test)
 
     @staticmethod
     def __read_tagged_data(data_file):

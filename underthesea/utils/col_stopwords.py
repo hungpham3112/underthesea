@@ -43,7 +43,7 @@ class KLDivergence:
 
     def write(self):
         words = [x for _, x in sorted(zip(self.values, self.words), reverse=True)][:70]  # Top 70
-        content = "\n".join([s for s in words])
+        content = "\n".join(list(words))
         target_file = join(STOPWORDS_FOLDER, "stopwords_dev.txt")
         with open(target_file, "w") as f:
             f.write(content)

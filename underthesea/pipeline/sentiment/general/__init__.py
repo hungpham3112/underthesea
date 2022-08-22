@@ -24,7 +24,6 @@ def sentiment(X):
     labels = sentence.labels
     try:
         label_map = {'POS': 'positive', 'NEG': 'negative'}
-        label = label_map[labels[0]]
-        return label
+        return label_map[labels[0]]
     except Exception:
         return None

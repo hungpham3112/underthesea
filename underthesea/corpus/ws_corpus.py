@@ -12,11 +12,8 @@ class WSCorpus(Corpus):
 
     def map_token(self, token):
         if token[1] == "B_W":
-            return " " + token[0]
-        if token[1] == "I_W":
-            return "_" + token[0]
-        else:
-            return " " + token[0]
+            return f" {token[0]}"
+        return f"_{token[0]}" if token[1] == "I_W" else f" {token[0]}"
 
     def _column_to_text(self, sentence):
         s = sentence

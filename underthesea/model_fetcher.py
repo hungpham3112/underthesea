@@ -156,9 +156,8 @@ class ModelFetcher:
             license = REPO[key]["license"]
             year = REPO[key]["year"]
             directory = Path(REPO[key]["cache_dir"]) / REPO[key]["model_path"]
-            if not all:
-                if license == "Close":
-                    continue
+            if not all and license == "Close":
+                continue
             if license == "Close":
                 license = "Close*"
             models.append([name, type, license, year, directory])

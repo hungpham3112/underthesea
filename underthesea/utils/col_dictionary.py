@@ -45,8 +45,7 @@ class Dictionary:
             for sense in self.data[word]:
                 item = {'token': word, 'pos': sense['tag']}
                 output.append(item)
-        df = pd.DataFrame(output)
-        return df
+        return pd.DataFrame(output)
 
     def save(self, dictionary_file):
         content = yaml.dump(self.data, allow_unicode=True, sort_keys=True)
@@ -112,10 +111,14 @@ if __name__ == '__main__':
             tag = items[1]['pos']
             if word is None:
                 return '', ''
-            for sense in word.senses:
-                if sense.tag == tag:
-                    return 'x', sense.description
-            return '', ''
+            return next(
+                (
+                    ('x', sense.description)
+                    for sense in word.senses
+                    if sense.tag == tag
+                ),
+                ('', ''),
+            )
 
         vlsp_data = [check_has_tag(data) for data in zip(words, df.iterrows())]
         votes, descriptions = zip(*vlsp_data)

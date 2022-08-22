@@ -12,10 +12,7 @@ def revise_vlsp2013_wtk_dataset(source_file, dest_file):
     with open(source_file) as f:
         content = Text(f.read())
         sentences = content.split("\n\n")
-    if basename(source_file) == "train.txt":
-        corpus_id = "train"
-    else:
-        corpus_id = "test"
+    corpus_id = "train" if basename(source_file) == "train.txt" else "test"
     last_index = len(sentences) - 1
     with open(dest_file, "w") as f:
         for i, sentence in enumerate(sentences):
@@ -25,10 +22,7 @@ def revise_vlsp2013_wtk_dataset(source_file, dest_file):
             text = " ".join([node[0] for node in nodes])
             text = f"# text = {text}\n"
             content = send_id + text + sentence
-            if i != last_index:
-                content += "\n\n"
-            else:
-                content += "\n"
+            content += "\n\n" if i != last_index else "\n"
             f.write(content)
 
 

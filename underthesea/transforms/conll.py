@@ -36,7 +36,7 @@ class Transform(object):
         self.training = True
 
     def __call__(self, sentences):
-        pairs = dict()
+        pairs = {}
         for field in self:
             if field not in self.src and field not in self.tgt:
                 continue
@@ -85,7 +85,7 @@ class Sentence(object):
         self.transform = transform
 
         # mapping from each nested field to their proper position
-        self.maps = dict()
+        self.maps = {}
         # names of each field
         self.keys = set()
         # values of each position
@@ -403,7 +403,7 @@ class CoNLLSentence(Sentence):
 
         self.values = []
         # record annotations for post-recovery
-        self.annotations = dict()
+        self.annotations = {}
 
         for i, line in enumerate(lines):
             value = line.split('\t')
@@ -524,7 +524,7 @@ class Tree(Transform):
         while nodes:
             node = nodes.pop()
             if isinstance(node, nltk.Tree):
-                nodes.extend([child for child in node])
+                nodes.extend(list(node))
                 if len(node) > 1:
                     for i, child in enumerate(node):
                         if not isinstance(child[0], nltk.Tree):
@@ -628,10 +628,7 @@ class Tree(Transform):
 
         def track(node):
             i, j, label = next(node)
-            if j == i + 1:
-                children = [leaves[i]]
-            else:
-                children = track(node) + track(node)
+            children = [leaves[i]] if j == i + 1 else track(node) + track(node)
             if label.endswith('|<>'):
                 return children
             labels = label.split('+')

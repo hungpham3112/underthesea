@@ -30,6 +30,6 @@ if __name__ == '__main__':
     # SE: sketch engine
     SE_FOLDER = join(WIKI_FOLDER, "se", "AA")
     os.makedirs(SE_FOLDER, exist_ok=True)
-    se_file = join(SE_FOLDER, file + ".vert")
+    se_file = join(SE_FOLDER, f"{file}.vert")
 
     convert_to_sketchengine(ud_dataset, se_file)

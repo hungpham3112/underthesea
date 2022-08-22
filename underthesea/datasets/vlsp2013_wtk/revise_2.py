@@ -13,7 +13,7 @@ DATA_FILE = join(CD, "revise_2_data.yml")
 def load_ignores():
     def extract_ids(content):
         ids = content.split(",")
-        ids = set([int(id) for id in ids])
+        ids = {int(id) for id in ids}
         return ids
 
     with open(DATA_FILE) as f:
@@ -51,10 +51,7 @@ def revise_vlsp2013_wtk_dataset(source_file, dest_file):
             text = " ".join([node[0] for node in nodes])
             text = f"# text = {text}\n"
             content = send_id + text + sentence
-            if i != last_index:
-                content += "\n\n"
-            else:
-                content += "\n"
+            content += "\n\n" if i != last_index else "\n"
             f.write(content)
 
 

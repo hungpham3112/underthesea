@@ -40,5 +40,4 @@ def chunk(sentence, format=None):
     """
     sentence = pos_tag(sentence)
     crf_model = CRFChunkingPredictor.Instance()
-    result = crf_model.predict(sentence, format)
-    return result
+    return crf_model.predict(sentence, format)

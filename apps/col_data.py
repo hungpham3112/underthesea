@@ -27,8 +27,7 @@ class Dictionary:
             return {}
         print(word)
         body = self.es.get(index=self.es_index, id=word)
-        data = body["_source"]
-        return data
+        return body["_source"]
 
     def save(self, word, data):
         self.es.index(index=self.es_index, id=word, body=data)

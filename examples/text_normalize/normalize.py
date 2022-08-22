@@ -78,21 +78,52 @@ syllable_map_r = {
     "y": "ỷỳỵỵỹý"
 }
 syllable_map = {}
-for key in syllable_map_r:
-    items = syllable_map_r[key]
+for key, items in syllable_map_r.items():
     for item in items:
         syllable_map[item] = key
-NONE_DIACRITIC_SINGLE_VOWELS = set(["a", "e", "i", "o", "u", "y"])
-NONE_DIACRITIC_DOUBLE_VOWELS = set([
-    "ai", "ao", "au", "ay",
-    "eo", "eu", "ia", "ie", "iu", "oa", "oe", "oi", "oo",
-    "ua", "ue", "ui", "uo", "uu", "uy", "ye"
-])
-NONE_DIACRITIC_TRIPLE_VOWELS = set([
-    "iai", "ieu", "iua", "oai", "oao", "oay", "oeo",
-    "uao", "uai", "uay", "uoi", "uou", "uya", "uye", "uyu",
-    "yeu"
-])
+NONE_DIACRITIC_SINGLE_VOWELS = {"a", "e", "i", "o", "u", "y"}
+NONE_DIACRITIC_DOUBLE_VOWELS = {
+    "ai",
+    "ao",
+    "au",
+    "ay",
+    "eo",
+    "eu",
+    "ia",
+    "ie",
+    "iu",
+    "oa",
+    "oe",
+    "oi",
+    "oo",
+    "ua",
+    "ue",
+    "ui",
+    "uo",
+    "uu",
+    "uy",
+    "ye",
+}
+
+NONE_DIACRITIC_TRIPLE_VOWELS = {
+    "iai",
+    "ieu",
+    "iua",
+    "oai",
+    "oao",
+    "oay",
+    "oeo",
+    "uao",
+    "uai",
+    "uay",
+    "uoi",
+    "uou",
+    "uya",
+    "uye",
+    "uyu",
+    "yeu",
+}
+
 NONE_DIACRITIC_VOWELS = NONE_DIACRITIC_SINGLE_VOWELS | NONE_DIACRITIC_DOUBLE_VOWELS | NONE_DIACRITIC_TRIPLE_VOWELS
 
 
@@ -108,10 +139,7 @@ class AnalysableWord:
                 normalize_syllable = syllable
             if normalize_syllable in NONE_DIACRITIC_SINGLE_VOWELS:
                 group += normalize_syllable
-        if group in NONE_DIACRITIC_VOWELS:
-            miss_spell = False
-        else:
-            miss_spell = True
+        miss_spell = group not in NONE_DIACRITIC_VOWELS
         self.group = group
         self.miss_spell = miss_spell
 

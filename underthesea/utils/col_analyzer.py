@@ -10,7 +10,7 @@ def get_words_pos(dictionary):
     output = {}
     for word in dictionary.words:
         data = dictionary.words[word]
-        pos = list(set([_['pos'] for _ in data]))
+        pos = list({_['pos'] for _ in data})
         output[word] = pos
     return output
 
@@ -42,8 +42,7 @@ class UDAnalyzer:
     def _get_words(self, sentences):
         tags = [s.rows for s in sentences]
         tags = [t for sublist in tags for t in sublist]
-        words = [t[0].lower() for t in tags]
-        return words
+        return [t[0].lower() for t in tags]
 
     def _get_doc_sents(self, dataset):
         """Return doc as key and doc sentence array as value"""
@@ -67,8 +66,7 @@ class UDAnalyzer:
     def analyze_words_pos(self, sentences):
         tags = [s.rows for s in sentences]
         tags = [t for sublist in tags for t in sublist]
-        df = pd.DataFrame(tags, columns=["word", "pos", "order", "dep"])
-        return df
+        return pd.DataFrame(tags, columns=["word", "pos", "order", "dep"])
 
     def analyze_words(self, sentences):
         tags = [s.rows for s in sentences]
@@ -92,8 +90,7 @@ class UDAnalyzer:
 
     def get_today_sentences(self, dataset):
         yesterday = (date.today() - timedelta(days=1)).strftime('%Y%m%d')
-        sentences = [s for s in dataset if s.headers['date'] == yesterday]
-        return sentences
+        return [s for s in dataset if s.headers['date'] == yesterday]
 
     def analyze_today_words(self, dataset):
         sentences = self.get_today_sentences(dataset)
@@ -104,23 +101,22 @@ class UDAnalyzer:
         sent_ids = [s.headers['sent_id'] for s in dataset]
         counter = Counter(sent_ids)
 
-        duplicate_ids = [key for key in counter if counter[key] > 1]
-        if len(duplicate_ids) > 0:
-            logger.error('[ERROR] duplicate_ids' + str(duplicate_ids))
+        if duplicate_ids := [key for key in counter if counter[key] > 1]:
+            logger.error(f'[ERROR] duplicate_ids{duplicate_ids}')
         else:
             logger.debug("sent_ids is valid.")
 
-        missing_ids = [str(i + 1) for i in range(len(sent_ids)) if str(i + 1) not in sent_ids]
-        if len(missing_ids) > 0:
-            logger.error('[ERROR] missing_ids' + str(missing_ids))
+        if missing_ids := [
+            str(i + 1) for i in range(len(sent_ids)) if str(i + 1) not in sent_ids
+        ]:
+            logger.error(f'[ERROR] missing_ids{missing_ids}')
         return sent_ids
 
     def analyze_doc_sent_freq(self, dataset):
         """Get sentence count by doc url"""
         data = self._get_doc_sents(dataset)
-        print("Number of doc URLs %s" % len(data))
-        doc_sent_counts = [(doc, len(sents)) for doc, sents in data.items()]
-        return doc_sent_counts
+        print(f"Number of doc URLs {len(data)}")
+        return [(doc, len(sents)) for doc, sents in data.items()]
 
     def analyze_dataset_len(self, dataset):
         print("Number of sentences", len(dataset))
